@@ -34,11 +34,11 @@ async function start() {
     devServers.push(devServer);
 
     // FIXME: Workaround to avoid some kind of deadlock when starting multiple dev servers
-    await new Promise<void>((resolve, _reject) => {
-      plugin.rsbuild.onDevCompileDone(() => {
-        setTimeout(resolve, 3000);
-      });
-    });
+    //await new Promise<void>((resolve, _reject) => {
+    //  plugin.rsbuild.onDevCompileDone(() => {
+    //    setTimeout(resolve, 3000);
+    //  });
+    //});
   }
 
   const httpServer = app.listen(PROXY_PORT, () => {
