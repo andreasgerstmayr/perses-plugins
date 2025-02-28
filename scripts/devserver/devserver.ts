@@ -17,6 +17,8 @@ EventEmitter.defaultMaxListeners = 20;
 // https://github.com/rspack-contrib/rspack-examples/blob/03aa9913fe1208173111488860a56bfd56d15aaf/rsbuild/express/server.mjs
 
 async function start() {
+  setInterval(() => console.log(`${new Date()} Node.js event loop responsive`), 1000);
+
   const plugins: Plugins[] = [];
   for (const workspace of packagejson.workspaces) {
     const path = resolve(workspace);
@@ -32,13 +34,6 @@ async function start() {
     const devServer = await plugin.rsbuild.createDevServer();
     app.use(devServer.middlewares);
     devServers.push(devServer);
-
-    // FIXME: Workaround to avoid some kind of deadlock when starting multiple dev servers
-    //await new Promise<void>((resolve, _reject) => {
-    //  plugin.rsbuild.onDevCompileDone(() => {
-    //    setTimeout(resolve, 3000);
-    //  });
-    //});
   }
 
   const httpServer = app.listen(PROXY_PORT, () => {
