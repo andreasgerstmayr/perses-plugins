@@ -34,6 +34,10 @@ async function start() {
     const devServer = await plugin.rsbuild.createDevServer();
     app.use(devServer.middlewares);
     devServers.push(devServer);
+
+    plugin.rsbuild.onDevCompileDone(() => {
+      console.log("onDevCompileDone() called");
+    });
   }
 
   const httpServer = app.listen(PROXY_PORT, () => {
