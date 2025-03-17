@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - cue-cache
   pull_request:
   merge_group:
   release:
@@ -23,11 +24,21 @@ jobs:
           enable_go: true
           enable_cue: true
           cue_version: "v0.12.0"
+      - name: Cache CUE dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/cue
+          key: ${{ runner.os }}-cue-${{ hashFiles('**/module.cue') }}
+          restore-keys: |
+            ${{ runner.os }}-cue-
       - name: install percli
         uses: perses/cli-actions/actions/install_percli@v0.1.0
         with:
           cli_version: "main-2025-03-11-40259f7f-distroless"
       - name: Login to CUE's Central Registry to allow retrieving deps
+        env:
+          CUE_REG_TOKEN: ${{ secrets.CUE_REG_TOKEN }}
+        if: ${{ env.CUE_REG_TOKEN }}
         run: cue login --token=${{ secrets.CUE_REG_TOKEN }}
       - name: install dependencies
         run: npm ci
@@ -93,7 +104,17 @@ jobs:
           enable_go: true
           cue_version: 'v0.12.0'
           enable_cue: true
+      - name: Cache CUE dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/cue
+          key: ${{ runner.os }}-cue-${{ hashFiles('**/module.cue') }}
+          restore-keys: |
+            ${{ runner.os }}-cue-
       - name: Login to CUE's Central Registry to allow retrieving deps
+        env:
+          CUE_REG_TOKEN: ${{ secrets.CUE_REG_TOKEN }}
+        if: ${{ env.CUE_REG_TOKEN }}
         run: cue login --token=${{ secrets.CUE_REG_TOKEN }}
       - run: make validate-schemas
   
@@ -109,7 +130,17 @@ jobs:
           enable_go: true
           enable_cue: true
           cue_version: 'v0.12.0'
+      - name: Cache CUE dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/cue
+          key: ${{ runner.os }}-cue-${{ hashFiles('**/module.cue') }}
+          restore-keys: |
+            ${{ runner.os }}-cue-
       - name: Login to CUE's Central Registry to allow retrieving deps
+        env:
+          CUE_REG_TOKEN: ${{ secrets.CUE_REG_TOKEN }}
+        if: ${{ env.CUE_REG_TOKEN }}
         run: cue login --token=${{ secrets.CUE_REG_TOKEN }}
       - name: Tidy modules
         run: make tidy-modules
