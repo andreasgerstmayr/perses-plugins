@@ -57,5 +57,16 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
     "typescript": "^5.4.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "@rspack/core": "npm:@rspack-canary/core@1.2.9-canary-c8901a07-20250314102251",
+      "@rspack/cli": "npm:@rspack-canary/cli@1.2.9-canary-c8901a07-20250314102251"
+    },
+    "peerDependencyRules": {
+      "allowAny": [
+        "@rspack/*"
+      ]
+    }
   }
 }
